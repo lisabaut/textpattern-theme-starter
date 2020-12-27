@@ -1,0 +1,8 @@
+{
+  "title": "Your theme name here",
+  "version": "0.1.0",
+  "description": "Your theme description here",
+  "author": "Your name",
+  "author_uri": "your-URL",
+  "txp-type": "textpattern-theme"
+}

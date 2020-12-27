@@ -3,8 +3,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HTMLTemplates = require('./scripts/html-templates.js');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const postcssPresetEnv = require('postcss-preset-env');
+const CopyPlugin = require('copy-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
+const ThemeConfiguration = require('./theme-configuration.js');
 
-const publicPath = './public/assets';
+const themeSrc = 'txp-theme';
+const themeDist = ThemeConfiguration.themeFolderName;
+const assetsPath = './public/assets';
 
 module.exports = (env, argv) => {
   const isProductionMode = argv.mode === 'production';
@@ -15,14 +20,14 @@ module.exports = (env, argv) => {
     ...(!isProductionMode
       ? {
           devServer: {
-            contentBase: publicPath
+            contentBase: assetsPath
           }
         }
       : {}),
     entry: ['./src/ts/index.ts', './src/sass/index.scss'],
     output: {
-      filename: isProductionMode ? 'js/bundle.[hash].js' : 'js/bundle.js',
-      path: path.resolve(__dirname, publicPath)
+      filename: 'js/bundle.js',
+      path: path.resolve(__dirname, assetsPath)
     },
     module: {
       // Rules are read from right to left
@@ -80,12 +85,32 @@ module.exports = (env, argv) => {
       ]
     },
     plugins: [
+      new WriteFilePlugin(),
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: isProductionMode ? 'css/[name].[hash].css' : 'css/[name].css'
+        filename: 'css/[name].css'
       }),
       // creates HTMLPlugins from each HTML file in folder "templates"
-      ...HTMLTemplates.createPlugins(isProductionMode)
+      ...HTMLTemplates.createPlugins(isProductionMode),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: '**/*',
+            context: path.resolve(__dirname, 'src', 'images'),
+            to: path.resolve(__dirname, assetsPath, 'images')
+          },
+          {
+            from: '**/*',
+            context: path.resolve(__dirname, 'src', 'fonts'),
+            to: path.resolve(__dirname, assetsPath, 'fonts')
+          },
+          {
+            from: '**/*',
+            context: path.resolve(__dirname, 'src', themeSrc),
+            to: path.resolve(__dirname, 'public/themes', themeDist)
+          }
+        ]
+      })
     ]
   };
 };

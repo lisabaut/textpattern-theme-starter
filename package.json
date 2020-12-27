@@ -1,7 +1,7 @@
 {
-  "name": "webpack4-starter-typescript-scss",
+  "name": "textpattern-theme-development-starter",
   "version": "0.1.0",
-  "description": "Webpack 4 Starter Kit with TypeScript and SCSS support",
+  "description": "Textpattern Theme Development Starter Kit with TypeScript and SCSS support",
   "author": "lisabaut",
   "license": "MIT",
   "scripts": {
@@ -14,6 +14,7 @@
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^6.0.2",
     "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
@@ -21,7 +22,7 @@
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.18.2",
@@ -35,6 +36,7 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "write-file-webpack-plugin": "^4.5.1"
   }
 }
