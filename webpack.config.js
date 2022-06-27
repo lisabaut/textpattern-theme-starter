@@ -20,14 +20,14 @@ module.exports = (env, argv) => {
     ...(!isProductionMode
       ? {
           devServer: {
-            contentBase: assetsPath
-          }
+            static: './',
+          },
         }
       : {}),
     entry: ['./src/ts/index.ts', './src/sass/index.scss'],
     output: {
       filename: 'js/bundle.js',
-      path: path.resolve(__dirname, assetsPath)
+      path: path.resolve(__dirname, assetsPath),
     },
     module: {
       // Rules are read from right to left
@@ -35,7 +35,7 @@ module.exports = (env, argv) => {
         {
           test: /\.tsx?$/,
           use: 'ts-loader',
-          exclude: /node_modules/
+          exclude: /node_modules/,
         },
         {
           test: /\.s[ac]ss$/i,
@@ -43,32 +43,34 @@ module.exports = (env, argv) => {
             {
               loader: MiniCssExtractPlugin.loader,
               options: {
-                publicPath: '../', // enable relative paths for images and fonts
-                hmr: !isProductionMode
-              }
+                publicPath: '../images/', // enable relative paths for images and fonts
+              },
             },
             'css-loader',
             {
               loader: 'postcss-loader',
               options: {
-                ident: 'postcss',
-                plugins: () => [
-                  postcssPresetEnv({
-                    autoprefixer: { grid: true }
-                  })
-                ]
-              }
+                postcssOptions: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    postcssPresetEnv({
+                      autoprefixer: { grid: true },
+                    }),
+                  ],
+                },
+              },
             },
-            'sass-loader'
-          ]
+            'sass-loader',
+          ],
         },
         {
           test: /\.(svg|png|jpe?g|gif)$/i,
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'images'
-          }
+            publicPath: 'images',
+            esModule: false,
+          },
         },
         {
           test: /\.(eot|ttf|woff|woff2)$/,
@@ -77,18 +79,19 @@ module.exports = (env, argv) => {
               loader: 'file-loader',
               options: {
                 name: '[name].[ext]',
-                outputPath: 'fonts'
-              }
-            }
-          ]
-        }
-      ]
+                publicPath: 'fonts',
+                esModule: false,
+              },
+            },
+          ],
+        },
+      ],
     },
     plugins: [
       new WriteFilePlugin(),
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: 'css/[name].css'
+        filename: 'css/[name].css',
       }),
       // creates HTMLPlugins from each HTML file in folder "templates"
       ...HTMLTemplates.createPlugins(isProductionMode),
@@ -97,20 +100,20 @@ module.exports = (env, argv) => {
           {
             from: '**/*',
             context: path.resolve(__dirname, 'src', 'images'),
-            to: path.resolve(__dirname, assetsPath, 'images')
+            to: path.resolve(__dirname, assetsPath, 'images'),
           },
           {
             from: '**/*',
             context: path.resolve(__dirname, 'src', 'fonts'),
-            to: path.resolve(__dirname, assetsPath, 'fonts')
+            to: path.resolve(__dirname, assetsPath, 'fonts'),
           },
           {
             from: '**/*',
             context: path.resolve(__dirname, 'src', themeSrc),
-            to: path.resolve(__dirname, 'public/themes', themeDist)
-          }
-        ]
-      })
-    ]
+            to: path.resolve(__dirname, 'public/themes', themeDist),
+          },
+        ],
+      }),
+    ],
   };
 };
